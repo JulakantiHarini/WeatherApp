@@ -1,0 +1,184 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WEATHER WEBSITE</title>
+<style>
+.error
+{
+text-align:left;
+margin-left:10px;
+font-size:14px;
+margin-top:10px;
+display:none;
+}
+body
+{
+background:url("https://www.shutterstock.com/image-vector/blue-sky-clouds-anime-style-600nw-2157978867.jpg");
+background-repeat:no-repeat;
+background-size:cover;
+}
+.d{
+width:90%;
+max-width:470px;
+background-color:deepskyblue;
+margin:100px auto 100px;
+border-radius:20px;
+padding:40px;
+text-align:center;
+border-style:solid;
+border-color:black;
+}
+.d1
+{
+width:100%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+button
+{
+border-radius:50%;
+border:0;
+width:50px;
+height:50px;
+}
+button img
+{
+width:30px;
+height:30px;
+}
+.d1 input
+{
+border-radius:40px;
+font-family:cursive;
+padding:10px 25px;
+flex:1;
+margin-right:14px;
+font-size:18px;
+border:0;
+}
+.d2 img
+{
+height:250px;
+width:250px;
+margin-top:20px;
+}
+.d2 h1
+{
+font-family:cursive;
+font-size:30px;
+font-weight:500;
+margin-top:-10px;
+}
+.d3
+{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 20px;
+}
+.c1
+{
+display:flex;
+align-items:center;
+text-align:left;
+}
+.c1 img
+{
+width:60px;
+height:60px;
+margin-right:20px;
+}
+.humidity , .wind
+{
+font-size:20px;
+}
+</style>
+</head>
+<body>
+<div class="d">
+<div class="d1">
+<input type="text" spellcheck="false" placeholder="Enter City Name">
+<button><img src="https://w7.pngwing.com/pngs/471/149/png-transparent-computer-icons-symbol-search-miscellaneous-black-and-white-magnifying-glass.png"></button>
+</div>
+<div class="error">
+<p>Invalid City Name</p>
+</div>
+<div class="d2">
+<img src="https://static.vecteezy.com/system/resources/thumbnails/008/854/789/small_2x/sunny-and-rainy-cloudy-day-weather-forecast-icon-meteorological-sign-3d-render-png.png" class="weather-icon">
+<h1 class="temp">
+22°C </h1>
+<p style="font-family:cursive;font-size:30px;margin-top:-10px;font-weight:500;" class="city">NEW YORK</p>
+<div class="d3">
+<div class="c1">
+<img src="https://static-00.iconduck.com/assets.00/humidity-icon-2048x1675-xxsge5os.png">
+<div>
+<p class="humidity">50%</p>
+<p>HUMIDITY</p>
+</div>
+</div>
+<div class="c1">
+<img src="https://cdn-icons-png.flaticon.com/512/54/54298.png">
+<div>
+<p class="wind">20 km/h</p>
+<p>WIND SPEED</p>
+</div>
+</div>
+</div>
+</div>
+<script>
+const apiKey='63a90ae96d390ec37d6c1252f5a86e1a';
+const apiUrl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+const searchBox=document.querySelector(".d1 input");
+const searchBtn=document.querySelector(".d1 button");
+const weatherIcon=document.querySelector(".weather-icon");
+
+async function checkWeather(city)
+{
+const response=await fetch(apiUrl+city+`&appid=${apiKey}`);
+if(response.status==404)
+{
+document.querySelector(".error").style.display="block";
+document.querySelector(".d2").style.display="none";
+}
+else
+{
+var data=await response.json();
+console.log(data);
+document.querySelector(".city").innerHTML=data.name;
+document.querySelector(".temp").innerHTML=Math.round(data.main.temp)+"°C";
+document.querySelector(".humidity").innerHTML=data.main.humidity+"°%";
+document.querySelector(".wind").innerHTML=data.wind.speed+"km/h";
+if(data.weather[0].main=="Clouds")
+{
+weatherIcon.src="https://static.vecteezy.com/system/resources/thumbnails/010/989/785/small_2x/sunny-weather-3d-rendering-isolated-on-transparent-background-ui-ux-icon-design-web-and-app-trend-png.png";
+}
+else if(data.weather[0].main=="Clear")
+{
+weatherIcon.src="https://static.vecteezy.com/system/resources/thumbnails/010/989/531/small_2x/hot-weather-3d-rendering-isolated-on-transparent-background-ui-ux-icon-design-web-and-app-trend-png.png";
+}
+else if(data.weather[0].main=="Rain")
+{
+weatherIcon.src="https://static.vecteezy.com/system/resources/thumbnails/010/989/526/small_2x/rainy-weather-3d-rendering-isolated-on-transparent-background-ui-ux-icon-design-web-and-app-trend-png.png";
+}
+else if(data.weather[0].main=="Drizzle")
+{
+weatherIcon.src="https://cdn-icons-png.flaticon.com/512/4837/4837659.png";
+}
+else if(data.weather[0].main=="Mist")
+{
+weatherIcon.src="https://cdn-icons-png.flaticon.com/512/1197/1197102.png";
+}
+else if(data.weather[0].main=="Snow")
+{
+weatherIcon.src="https://static.vecteezy.com/system/resources/previews/024/825/197/original/3d-weather-icon-day-with-snow-free-png.png";
+}
+document.querySelector(".d2").style.display="block";
+document.querySelector(".error").style.display="none";
+}
+}
+searchBtn.addEventListener("click",()=>{
+checkWeather(searchBox.value);
+})
+</script>
+</body></html>
